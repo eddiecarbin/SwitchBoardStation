@@ -4,14 +4,14 @@
 // https://www.pjrc.com/teensy/pinout.html
 // 8 Switchs
 
-#define BUTTON0_PIN PIN_D0
-#define BUTTON1_PIN PIN_D1
-#define BUTTON2_PIN PIN_D2
-#define BUTTON3_PIN PIN_D3
-#define BUTTON4_PIN PIN_D4
-#define BUTTON5_PIN PIN_D5
-#define BUTTON6_PIN PIN_D6
-#define BUTTON7_PIN PIN_D7
+#define BUTTON0_PIN A0
+#define BUTTON1_PIN A1
+#define BUTTON2_PIN A2
+#define BUTTON3_PIN A3
+#define BUTTON4_PIN A4
+#define BUTTON5_PIN A5
+#define BUTTON6_PIN A6
+#define BUTTON7_PIN A7
 
 // 16 lights
 #define LED0_PIN 0
@@ -44,15 +44,16 @@ class LightGroup
 class Switch
 {
 };
+#define TESTPIN A6
 
-ToggleButton btn0(PIN_D0);
-ToggleButton btn1(PIN_D1);
-ToggleButton btn2(PIN_D2);
-ToggleButton btn3(BUTTON3_PIN);
-ToggleButton btn4(BUTTON4_PIN);
-ToggleButton btn5(BUTTON5_PIN);
-ToggleButton btn6(BUTTON6_PIN);
-ToggleButton btn7(BUTTON7_PIN);
+ToggleButton btn0(BUTTON0_PIN, 25, false);
+ToggleButton btn1(BUTTON1_PIN, 25, false);
+ToggleButton btn2(BUTTON2_PIN, 25, false);
+ToggleButton btn3(BUTTON3_PIN, 25, false);
+ToggleButton btn4(BUTTON4_PIN, 25, false);
+ToggleButton btn5(BUTTON5_PIN, 25, false);
+ToggleButton btn6(BUTTON6_PIN, 25, false);
+ToggleButton btn7(BUTTON7_PIN, 25, false);
 
 //LightGroup lightGroup0(LED0_PIN, LED10_PIN);
 // the setup function runs once when you press reset or power the board
@@ -99,6 +100,9 @@ void setup()
   pinMode(LED14_PIN, OUTPUT);
   pinMode(LED15_PIN, OUTPUT); */
 
+  // digitalWrite(TESTPIN, LOW);
+
+  // pinMode(TESTPIN, INPUT);
   // show the initial states
   /* digitalWrite(LED1_PIN, LOW);
   digitalWrite(LED2_PIN, LOW);
@@ -115,6 +119,11 @@ void loop()
   // put your main code here, to run repeatedly:
 
   btn0.read();
+
+  if (btn0.changed())
+    Serial.println("btn 0 changed");
+
+
   btn1.read();
   btn2.read();
   btn3.read();
@@ -123,12 +132,11 @@ void loop()
   btn6.read();
   btn7.read();
 
-  if (btn3.changed())
-    Serial.println("why - " + String(BUTTON3_PIN));
-  //Serial.println(digitalRead(BUTTON0_PIN));
-  Serial.println(digitalRead(BUTTON4_PIN));
+  // Serial.println(digitalRead(TESTPIN));
   /* if (btn1.changed())
     digitalWrite(LED1_PIN, btn1.toggleState() ? 1 : 0);
   if (btn2.changed())
     digitalWrite(LED2_PIN, btn2.toggleState() ? 1 : 0); */
+
+  delay(1000 / 60);
 }
