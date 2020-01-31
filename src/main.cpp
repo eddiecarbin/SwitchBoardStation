@@ -14,6 +14,7 @@
 #define BUTTON7_PIN A7
 
 // 16 lights
+//RED LED BANK
 #define LED0_PIN 0
 #define LED1_PIN 1
 #define LED2_PIN 2
@@ -22,6 +23,8 @@
 #define LED5_PIN 5
 #define LED6_PIN 6
 #define LED7_PIN 7
+
+// GREEN LED BANK
 #define LED8_PIN 10
 #define LED9_PIN 11
 #define LED10_PIN 12
@@ -39,104 +42,96 @@ enum STATE_ENUM
 
 class LightGroup
 {
+
+public:
+  LightGroup(ToggleButton *button, int greenPin, int redPin)
+  {
+    this->button = button;
+    this->greenPin = greenPin;
+    this->redPin = redPin;
+  };
+
+  void init()
+  {
+    button->begin();
+    pinMode(greenPin, OUTPUT);
+    pinMode(redPin, OUTPUT);
+  };
+
+  void update()
+  {
+    button->read();
+
+    if (button->isPressed() == true)
+    {
+      digitalWrite(greenPin, HIGH);
+      digitalWrite(redPin, LOW);
+    }
+    else
+    {
+      digitalWrite(greenPin, LOW);
+      digitalWrite(redPin, HIGH);
+    }
+  };
+
+  void scramble()
+  {
+  }
+
+private:
+  ToggleButton *button;
+  int greenPin = 0;
+  int redPin = 0;
 };
 
-class Switch
-{
-};
-#define TESTPIN A6
+ToggleButton btn0(BUTTON0_PIN, 25, true);
+ToggleButton btn1(BUTTON1_PIN, 25, true);
+ToggleButton btn2(BUTTON2_PIN, 25, true);
+ToggleButton btn3(BUTTON3_PIN, 25, true);
+ToggleButton btn4(BUTTON4_PIN, 25, true);
+ToggleButton btn5(BUTTON5_PIN, 25, true);
+ToggleButton btn6(BUTTON6_PIN, 25, true);
+ToggleButton btn7(BUTTON7_PIN, 25, true);
 
-ToggleButton btn0(BUTTON0_PIN, 25, false);
-ToggleButton btn1(BUTTON1_PIN, 25, false);
-ToggleButton btn2(BUTTON2_PIN, 25, false);
-ToggleButton btn3(BUTTON3_PIN, 25, false);
-ToggleButton btn4(BUTTON4_PIN, 25, false);
-ToggleButton btn5(BUTTON5_PIN, 25, false);
-ToggleButton btn6(BUTTON6_PIN, 25, false);
-ToggleButton btn7(BUTTON7_PIN, 25, false);
-
-//LightGroup lightGroup0(LED0_PIN, LED10_PIN);
-// the setup function runs once when you press reset or power the board
-/* void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
-}
-
-// the loop function runs over and over again forever
-void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);                       // wait for a second
-} */
+LightGroup group0(&btn0, LED0_PIN, LED8_PIN);
+LightGroup group1(&btn1, LED1_PIN, LED9_PIN);
+LightGroup group2(&btn2, LED2_PIN, LED10_PIN);
+LightGroup group3(&btn3, LED3_PIN, LED11_PIN);
+LightGroup group4(&btn4, LED4_PIN, LED12_PIN);
+LightGroup group5(&btn5, LED5_PIN, LED13_PIN);
+LightGroup group6(&btn6, LED6_PIN, LED14_PIN);
+LightGroup group7(&btn7, LED7_PIN, LED15_PIN); 
 
 void setup()
 {
   // put your setup code here, to run once:
+  Serial.begin(9600);
+  delay(3000);
+  Serial.println("Start switchboard activity");
 
-  btn0.begin();
-  btn1.begin();
-  btn2.begin();
-  btn3.begin();
-  btn4.begin();
-  btn5.begin();
-  btn6.begin();
-  btn7.begin();
+  group0.init();
+  group1.init();
+  group2.init();
+  group3.init();
+  group4.init();
+  group5.init();
+  group6.init();
+  group7.init(); 
 
-  /*  pinMode(LED0_PIN, OUTPUT);
-  pinMode(LED1_PIN, OUTPUT);
-  pinMode(LED2_PIN, OUTPUT);
-  pinMode(LED3_PIN, OUTPUT);
-  pinMode(LED4_PIN, OUTPUT);
-  pinMode(LED5_PIN, OUTPUT);
-  pinMode(LED6_PIN, OUTPUT);
-  pinMode(LED7_PIN, OUTPUT);
-  pinMode(LED8_PIN, OUTPUT);
-  pinMode(LED9_PIN, OUTPUT);
-  pinMode(LED10_PIN, OUTPUT);
-  pinMode(LED11_PIN, OUTPUT);
-  pinMode(LED12_PIN, OUTPUT);
-  pinMode(LED13_PIN, OUTPUT);
-  pinMode(LED14_PIN, OUTPUT);
-  pinMode(LED15_PIN, OUTPUT); */
-
-  // digitalWrite(TESTPIN, LOW);
-
-  // pinMode(TESTPIN, INPUT);
-  // show the initial states
-  /* digitalWrite(LED1_PIN, LOW);
-  digitalWrite(LED2_PIN, LOW);
-  digitalWrite(LED11_PIN, LOW);
-  digitalWrite(LED12_PIN, LOW);
-  digitalWrite(LED6_PIN, LOW);
-  digitalWrite(LED7_PIN, LOW);
-  digitalWrite(LED14_PIN, LOW);
-  digitalWrite(LED15_PIN, LOW); */
+  pinMode(A0, INPUT_PULLUP);
 }
-
+// A0 A6
 void loop()
 {
-  // put your main code here, to run repeatedly:
+ group0.update();
+  group1.update();
+  group2.update();
+  group3.update();
+  group4.update();
+  group5.update();
+  group6.update();
+  group7.update(); 
 
-  btn0.read();
-
-  if (btn0.changed())
-    Serial.println("btn 0 changed");
-
-
-  btn1.read();
-  btn2.read();
-  btn3.read();
-  btn4.read();
-  btn5.read();
-  btn6.read();
-  btn7.read();
-
-  // Serial.println(digitalRead(TESTPIN));
-  /* if (btn1.changed())
-    digitalWrite(LED1_PIN, btn1.toggleState() ? 1 : 0);
-  if (btn2.changed())
-    digitalWrite(LED2_PIN, btn2.toggleState() ? 1 : 0); */
-
-  delay(1000 / 60);
+  //delay(1000 / 60);
+  delay(300);
 }
