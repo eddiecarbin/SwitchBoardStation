@@ -167,14 +167,22 @@ void loop()
   group6.update();
   group7.update();
 
-  if (group0.isComplete() &&
+  if ((group0.isComplete() &&
       group1.isComplete() &&
       group2.isComplete() &&
       group3.isComplete() &&
       group4.isComplete() &&
       group5.isComplete() &&
       group6.isComplete() &&
-      group7.isComplete())
+      group7.isComplete()) || 
+      (!group0.isComplete() &&
+      !group1.isComplete() &&
+      !group2.isComplete() &&
+      !group3.isComplete() &&
+      !group4.isComplete() &&
+      !group5.isComplete() &&
+      !group6.isComplete() &&
+      !group7.isComplete()))
   {
 
     unsigned long m = millis();
