@@ -37,6 +37,9 @@
 #define LED15_PIN 17
 #define RESTART 3 * 1000
 
+#define TOTAL_GROUPS 8
+#define SEC 1000
+
 enum STATE_ENUM
 {
   GREEN,
@@ -80,6 +83,11 @@ public:
     }
   }
 
+  void change()
+  {
+    target = !target;
+  }
+
   void scramble(bool target)
   {
     this->target = target;
@@ -115,6 +123,8 @@ LightGroup group4(&btn4, LED4_PIN, LED12_PIN);
 LightGroup group5(&btn5, LED5_PIN, LED13_PIN);
 LightGroup group6(&btn6, LED6_PIN, LED14_PIN);
 LightGroup group7(&btn7, LED7_PIN, LED15_PIN);
+
+LightGroup *groupArray[TOTAL_GROUPS] = {&group0, &group1, &group2, &group3, &group4, &group5, &group6, &group7};
 
 bool switchCompleted = false;
 unsigned long restartTime = 0;
@@ -167,44 +177,39 @@ void loop()
   group6.update();
   group7.update();
 
-  if ((group0.isComplete() &&
-      group1.isComplete() &&
-      group2.isComplete() &&
-      group3.isComplete() &&
-      group4.isComplete() &&
-      group5.isComplete() &&
-      group6.isComplete() &&
-      group7.isComplete()) || 
-      (!group0.isComplete() &&
-      !group1.isComplete() &&
-      !group2.isComplete() &&
-      !group3.isComplete() &&
-      !group4.isComplete() &&
-      !group5.isComplete() &&
-      !group6.isComplete() &&
-      !group7.isComplete()))
+  unsigned long m = millis();
+
+  if (m > restartTime)
   {
-
-    unsigned long m = millis();
-    if (!switchCompleted)
+    int num = random(3) + 1;
+    int switchNum = random(0, TOTAL_GROUPS);
+    for (int i = 0; i < num; ++i)
     {
-      switchCompleted = true;
-      restartTime = m + RESTART;
-    }
+      if (groupArray[switchNum]->isComplete())
+        groupArray[switchNum]->change();
 
-    if (m > restartTime)
-    {
-      group0.scramble(randomBool());
-      group1.scramble(randomBool());
-      group2.scramble(randomBool());
-      group3.scramble(randomBool());
-      group4.scramble(randomBool());
-      group5.scramble(randomBool());
-      group6.scramble(randomBool());
-      group7.scramble(randomBool());
-      switchCompleted = false;
+      switchNum = random(0, TOTAL_GROUPS);
     }
+    restartTime = m + random(3 * SEC, 30 * SEC);
   }
 
   delay(FRAME_RATE);
 }
+
+/* if ((group0.isComplete() &&
+       group1.isComplete() &&
+       group2.isComplete() &&
+       group3.isComplete() &&
+       group4.isComplete() &&
+       group5.isComplete() &&
+       group6.isComplete() &&
+       group7.isComplete()) ||
+      (!group0.isComplete() &&
+       !group1.isComplete() &&
+       !group2.isComplete() &&
+       !group3.isComplete() &&
+       !group4.isComplete() &&
+       !group5.isComplete() &&
+       !group6.isComplete() &&
+       !group7.isComplete()))
+  { */
